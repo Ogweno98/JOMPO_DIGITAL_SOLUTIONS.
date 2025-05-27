@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You - JOMPO Shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f1f8e9;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      color: #2e7d32;
+      text-align: center;
+    }
+    .summary {
+      margin-top: 30px;
+    }
+    .summary h2 {
+      color: #388e3c;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2e7d32;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You for Your Order!</h1>
+    <p>Your transaction was successful. A confirmation email has been sent to your inbox.</p>
+
+    <div class="summary">
+      <h2>Order Summary</h2>
+      <ul id="order-items"></ul>
+      <p class="total" id="order-total"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 JOMPO Digital Solutions. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Load and display order summary from localStorage
+    const items = JSON.parse(localStorage.getItem("cart")) || [];
+    const list = document.getElementById("order-items");
+    const totalDisplay = document.getElementById("order-total");
+    let total = 0;
+
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - KES ${item.price} x ${item.quantity}`;
+      list.appendChild(li);
+      total += item.price * item.quantity;
+    });
+
+    totalDisplay.textContent = `Total: KES ${total.toLocaleString()}`;
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - JOMPO Digital Solutions</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fbe7;
+      margin: 0;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+    }
+    .cart-summary {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .cart-summary h2 {
+      margin-top: 0;
+      color: #2e7d32;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .cart-total {
+      font-weight: bold;
+      text-align: right;
+      margin-top: 15px;
+    }
+    form {
+      margin-top: 30px;
+      background: #e8f5e9;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #2e7d32;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Checkout - JOMPO Digital Solutions</h1>
+</header>
+
+<main>
+  <div class="cart-summary" id="cartSummary">
+    <h2>Cart Summary</h2>
+    <!-- Cart items will be injected here -->
+  </div>
+
+  <form id="checkoutForm">
+    <h2>Enter Your Email</h2>
+    <input type="email" name="user_email" id="user_email" placeholder="you@example.com" required />
+    <button type="submit">Confirm & Pay</button>
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+<script>
+  emailjs.init("service_ciao27d");
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartSummary = document.getElementById("cartSummary");
+
+  let total = 0;
+  cart.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `<span>${item.name} x ${item.quantity}</span><span>Ksh ${item.price * item.quantity}</span>`;
+    cartSummary.appendChild(div);
+    total += item.price * item.quantity;
+  });
+
+  const totalDiv = document.createElement("div");
+  totalDiv.className = "cart-total";
+  totalDiv.innerText = `Total: Ksh ${total}`;
+  cartSummary.appendChild(totalDiv);
+
+  document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("user_email").value;
+
+    const message = cart.map(item => `${item.name} x ${item.quantity} = Ksh ${item.price * item.quantity}`).join("\n") + `\n\nTotal: Ksh ${total}`;
+
+    emailjs.send("service_ciao27d", "template_b1odxxv", {
+      to_email: email,
+      message: message,
+    }).then(() => {
+      localStorage.removeItem("cart");
+      window.location.href = "thankyou.html";
+    }).catch(err => {
+      alert("Failed to send email. Please try again.");
+      console.error(err);
+    });
+  });
+</script>
+
+</body>
+</html>
